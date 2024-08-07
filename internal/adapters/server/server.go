@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	configs "go_rabbitmq_producer/config"
 	"go_rabbitmq_producer/internal/routes"
 	"net/http"
 
@@ -9,7 +10,10 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type Server struct{}
+type Server struct {
+	Port           int      `yaml:"port"`
+	AllowedOrigins []string `yaml:"allowed-origins"`
+}
 
 type IServer interface {
 	Run()
@@ -21,11 +25,12 @@ func (s *Server) Run() {
 	routes.Routes(router)
 	http.Handle("/", router)
 
-	port := "8082"
-	allowedOrigins := "*"
+	credentials := Server{}
+	config := configs.Config{}
+	config.Load("server", &credentials)
 
-	corsHandler := handlers.CORS(handlers.AllowedOrigins([]string{allowedOrigins}))(router)
+	corsHandler := handlers.CORS(handlers.AllowedOrigins(credentials.AllowedOrigins))(router)
 
-	fmt.Println(fmt.Printf("SERVER LISTENNING ON PORT: %s", port))
-	panic(http.ListenAndServe(fmt.Sprintf(":%s", port), corsHandler))
+	fmt.Println(fmt.Printf("SERVER LISTENNING ON PORT: %v", credentials.Port))
+	panic(http.ListenAndServe(fmt.Sprintf(":%v", credentials.Port), corsHandler))
 }
