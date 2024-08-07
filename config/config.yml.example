@@ -1,0 +1,29 @@
+exchange: {
+  name: "exchange-name",
+  kind: "direct",
+  durable: false,
+  auto-delete: false,
+  internal: false,
+  no-wait: false,
+  args: [],
+  bind: ""
+}
+queue: {
+  name: "queue-name",
+  durable: false,
+  exclusive: false,
+  auto-delete: false,
+  no-wait: false,
+  args: [],
+  bind: ""
+}
+message: {
+  headers: [],
+  content-type: "application/json",
+  delivery-mode: 0,
+  priority: 0,
+  correlation-id: "",
+  reply-to: "",
+  exiration: "",
+  type: ""
+}
